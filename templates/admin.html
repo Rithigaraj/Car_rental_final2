@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+
+<body>
+
+
+<h1>Add Car</h1>
+
+<form method="POST" action="/add_car">
+    <input type="text" name="name" placeholder="Car Name" required><br><br>
+    <input type="number" name="price" placeholder="Price per day" required><br><br>
+    <button type="submit">➕ Add Car</button>
+</form>
+
+<br><br>
+
+<a href="/logout"> Logout</a>
+
+<h1> Admin Dashboard</h1>
+
+<p>💰 Total Revenue: ₹ {{ revenue }}</p>
+
+<hr>
+
+<h2>📋 Bookings</h2>
+
+{% for b in bookings %}
+<div class="card" style="margin:10px; padding:15px;">
+
+    <p><b>🆔 Booking ID:</b> {{ b[0] }}</p>
+    <p><b>👤 User:</b> {{ b[1] }}</p>
+    <p><b>🚗 Car:</b> {{ b[3] }}</p>
+    <p><b>📅 Days:</b> {{ b[4] }}</p>
+
+    <p><b>💰 Total Price:</b> ₹ {{ b[6] }}</p>
+
+    <p><b>🙍 Name:</b> {{ b[7] }}</p>
+    <p><b>📧 Email:</b> {{ b[8] }}</p>
+
+    <p><b>📱 Mobile:</b> {{ b[9] }}</p>
+
+    <p><b>💳 Payment:</b> {{ b[10] }}</p>
+
+
+</div>
+{% endfor %}
+
+<hr>
+
+</body>
+</html>

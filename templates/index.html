@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Car Rental</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<h1>🚗 Luxury Car Rental</h1>
+
+<!-- ✅ USER SECTION -->
+<div style="text-align:center; margin-bottom:20px;">
+    {% if session.get('user') %}
+        <p>👋 Welcome, <b>{{ session['user'] }}</b></p>
+        <a href="/logout">🚪 Logout</a>
+    {% else %}
+        <a href="/login_user">👤 User Login</a> |
+        <a href="/register">📝 Register</a> |
+        <a href="/login">🔐 Admin Login</a>
+    {% endif %}
+</div>
+
+<hr>
+
+<!-- 🚗 CAR LIST -->
+<div class="cars">
+{% for car in cars %}
+<div class="card">
+    <h2>{{ car[1] }}</h2>
+    <p>₹{{ car[2] }} / day</p>
+
+    {% if session.get('user') %}
+
+    <form action="/book" method="POST">
+        <input type="hidden" name="car_id" value="{{ car[0] }}">
+        <input type="hidden" name="car_name" value="{{ car[1] }}">
+
+        <input type="number" name="days" placeholder="Days" required><br><br>
+
+        <input type="text" name="name" placeholder="Your Name" required><br><br>
+        <input type="email" name="email" placeholder="Email" required><br><br>
+        <input type="text" name="phone" placeholder="Phone Number" required><br><br>
+
+        <select name="payment" required>
+            <option value="Cash">Cash</option>
+            <option value="UPI">UPI</option>
+            <option value="Card">Card</option>
+        </select><br><br>
+
+        <button>🚀 Book Now</button>
+    </form>
+
+    {% else %}
+        <p>🔒 <a href="/login_user">Login</a> to book this car</p>
+    {% endif %}
+
+</div>
+{% endfor %}
+</div>
+<script src="/static/script.js"></script>
+
+</body>
+</html>
