@@ -1,56 +1,76 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+{% extends "base.html" %}
+{% block title %}Admin Overview — RithuDrive{% endblock %}
 
+{% block content %}
+<div class="admin-layout">
+    <aside class="admin-sidebar glass-card">
+        <h3 style="margin-bottom: 24px;">Admin Portal</h3>
+        <div class="sidebar-link active" onclick="showAdminSection('overview')">📊 Overview</div>
+        <div class="sidebar-link" onclick="showAdminSection('cars')">🚗 Manage Cars</div>
+        <div class="sidebar-link" onclick="showAdminSection('bookings')">📋 Bookings</div>
+        <div class="sidebar-link" onclick="showAdminSection('users')">👥 Users</div>
+    </aside>
 
-<body>
+    <div class="admin-main">
+        <div id="section-overview" class="admin-panel active">
+            <h2 style="margin-bottom: 32px;">System Analytics</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px;">
+                <div class="glass-card" style="text-align:center">
+                    <p class="text-muted">Revenue</p>
+                    <h2 class="car-price">₹{{ revenue }}</h2>
+                </div>
+                <div class="glass-card" style="text-align:center">
+                    <p class="text-muted">Users</p>
+                    <h2>{{ total_users }}</h2>
+                </div>
+                <div class="glass-card" style="text-align:center">
+                    <p class="text-muted">Cars</p>
+                    <h2>{{ total_cars }}</h2>
+                </div>
+                <div class="glass-card" style="text-align:center">
+                    <p class="text-muted">Bookings</p>
+                    <h2>{{ total_bookings }}</h2>
+                </div>
+            </div>
+        </div>
 
-
-<h1>Add Car</h1>
-
-<form method="POST" action="/add_car">
-    <input type="text" name="name" placeholder="Car Name" required><br><br>
-    <input type="number" name="price" placeholder="Price per day" required><br><br>
-    <button type="submit">➕ Add Car</button>
-</form>
-
-<br><br>
-
-<a href="/logout"> Logout</a>
-
-<h1> Admin Dashboard</h1>
-
-<p>💰 Total Revenue: ₹ {{ revenue }}</p>
-
-<hr>
-
-<h2>📋 Bookings</h2>
-
-{% for b in bookings %}
-<div class="card" style="margin:10px; padding:15px;">
-
-    <p><b>🆔 Booking ID:</b> {{ b[0] }}</p>
-    <p><b>👤 User:</b> {{ b[1] }}</p>
-    <p><b>🚗 Car:</b> {{ b[3] }}</p>
-    <p><b>📅 Days:</b> {{ b[4] }}</p>
-
-    <p><b>💰 Total Price:</b> ₹ {{ b[6] }}</p>
-
-    <p><b>🙍 Name:</b> {{ b[7] }}</p>
-    <p><b>📧 Email:</b> {{ b[8] }}</p>
-
-    <p><b>📱 Mobile:</b> {{ b[9] }}</p>
-
-    <p><b>💳 Payment:</b> {{ b[10] }}</p>
-
-
+        <!-- Users Section -->
+        <div id="section-users" class="admin-panel" style="display:none">
+            <h2 style="margin-bottom: 32px;">Registered Accounts</h2>
+            <div class="glass-card">
+                <table style="width:100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="text-align:left; color: var(--text-muted); border-bottom: 1px solid var(--border);">
+                            <th style="padding: 12px;">ID</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in users %}
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 16px;">#{{ u['id'] }}</td>
+                            <td>{{ u['username'] }}</td>
+                            <td><span style="color: {{ 'var(--primary)' if u['role'] == 'admin' else 'white' }}">{{ u['role'] }}</span></td>
+                            <td>
+                                <a href="/delete_user/{{ u['id'] }}" style="color: #ff4d4d;" onclick="return confirm('Delete user?')">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
-{% endfor %}
 
-<hr>
-
-</body>
-</html>
+<script>
+function showAdminSection(name) {
+    document.querySelectorAll('.admin-panel').forEach(p => p.style.display = 'none');
+    document.getElementById('section-' + name).style.display = 'block';
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+}
+</script>
+{% endblock %}

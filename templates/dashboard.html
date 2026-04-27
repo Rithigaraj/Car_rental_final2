@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}My Bookings — RithuDrive{% endblock %}
+
+{% block content %}
+<div style="padding-top: 48px; padding-bottom: 64px;">
+    <div style="margin-bottom: 40px;">
+        <h1>My Bookings</h1>
+        <p class="text-muted">Welcome back, <strong>{{ session['username'] }}</strong>. Here are your rental bookings.</p>
+    </div>
+
+    {% if bookings|length > 0 %}
+    <div style="display: grid; gap: 24px;">
+        {% for b in bookings %}
+        <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center; padding: 24px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 24px; flex-grow: 1;">
+                <div>
+                    <p class="text-muted" style="font-size: 0.8rem; text-transform: uppercase;">ID</p>
+                    <p style="font-weight: 700;">#{{ b['id'] }}</p>
+                </div>
+                <div>
+                    <p class="text-muted" style="font-size: 0.8rem; text-transform: uppercase;">Car</p>
+                    <p style="font-weight: 700;">{{ b['car_name'] }}</p>
+                </div>
+                <div>
+                    <p class="text-muted" style="font-size: 0.8rem; text-transform: uppercase;">Start Date</p>
+                    <p>{{ b['start_date'] or 'N/A' }}</p>
+                </div>
+                <div>
+                    <p class="text-muted" style="font-size: 0.8rem; text-transform: uppercase;">Total</p>
+                    <p style="color: var(--primary); font-weight: 700;">₹{{ "{:,.2f}".format(b['total'] or 0) }}</p>
+                </div>
+                <div>
+                    <p class="text-muted" style="font-size: 0.8rem; text-transform: uppercase;">Status</p>
+                    <span style="padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; border: 1px solid {{ 'var(--primary)' if b['status'] == 'active' else '#ff4d4d' }}; color: {{ 'var(--primary)' if b['status'] == 'active' else '#ff4d4d' }}">
+                        {{ b['status']|capitalize }}
+                    </span>
+                </div>
+            </div>
+            
+            <div style="margin-left: 24px;">
+                {% if b['status'] == 'active' %}
+                <a href="/cancel_booking/{{ b['id'] }}" class="btn btn-nav" style="background: rgba(255, 77, 77, 0.1); border-color: rgba(255, 77, 77, 0.2); color: #ff4d4d;"
+                   onclick="return confirm('Cancel this booking?')">
+                    Cancel
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="glass-card" style="text-align: center; padding: 80px;">
+        <div style="font-size: 3rem; margin-bottom: 24px;">📋</div>
+        <p class="text-muted">No bookings yet. <a href="/" style="color: var(--primary);">Explore cars</a> and book your first ride!</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

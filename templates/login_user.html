@@ -1,8 +1,27 @@
-<link rel="stylesheet" href="/static/style.css">
+{% extends "base.html" %}
+{% block title %}Login — RithuDrive{% endblock %}
 
-<h1>User Login</h1>
-<form method="POST">
-<input name="username" placeholder="Username">
-<input name="password" type="password" placeholder="Password">
-<button>Login</button>
-</form>
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card glass-card">
+        <h1>Welcome Back</h1>
+        <p class="auth-subtitle">Login to manage your rentals</p>
+
+        <form method="POST" action="/login">
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-input" placeholder="Enter your username" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-input" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Secure Login</button>
+        </form>
+
+        <div style="margin-top: 24px; color: var(--text-muted);">
+            Don't have an account? <a href="/register" style="color: var(--primary);">Create one</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
