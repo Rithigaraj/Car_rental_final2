@@ -34,6 +34,91 @@
             </div>
         </div>
 
+        <!-- Manage Cars Section -->
+        <div id="section-cars" class="admin-panel" style="display:none">
+            <h2 style="margin-bottom: 32px;">Manage Fleet</h2>
+            
+            <div class="glass-card" style="margin-bottom: 32px;">
+                <h3 style="margin-bottom: 20px;">Add New Car</h3>
+                <form action="/add_car" method="POST" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <input type="text" name="name" placeholder="Car Name (e.g. BMW M4)" required style="padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: white; border-radius: 8px;">
+                    <input type="number" name="price" placeholder="Price per Day (₹)" required style="padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: white; border-radius: 8px;">
+                    <input type="text" name="image_url" placeholder="Image URL" style="padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: white; border-radius: 8px;">
+                    <button type="submit" class="btn-primary" style="padding: 12px;">Add Car</button>
+                </form>
+            </div>
+
+            <div class="glass-card">
+                <table style="width:100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="text-align:left; color: var(--text-muted); border-bottom: 1px solid var(--border);">
+                            <th style="padding: 12px;">Car</th>
+                            <th>Daily Rate</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for car in cars %}
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 16px; display: flex; align-items: center; gap: 12px;">
+                                <img src="{{ car['image_url'] }}" style="width: 40px; height: 40px; border-radius: 4px; object-fit: cover;">
+                                {{ car['name'] }}
+                            </td>
+                            <td>₹{{ car['price'] }}</td>
+                            <td>
+                                <span style="padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; background: {{ 'rgba(0,255,0,0.1)' if car['available'] else 'rgba(255,0,0,0.1)' }}; color: {{ '#00ff00' if car['available'] else '#ff4d4d' }}">
+                                    {{ 'Available' if car['available'] else 'Rented' }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="/delete_car/{{ car['id'] }}" style="color: #ff4d4d;" onclick="return confirm('Delete car?')">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Bookings Section -->
+        <div id="section-bookings" class="admin-panel" style="display:none">
+            <h2 style="margin-bottom: 32px;">Recent Bookings</h2>
+            <div class="glass-card">
+                <table style="width:100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="text-align:left; color: var(--text-muted); border-bottom: 1px solid var(--border);">
+                            <th style="padding: 12px;">ID</th>
+                            <th>Customer</th>
+                            <th>Car</th>
+                            <th>Date</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for b in bookings %}
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 16px;">#{{ b['id'] }}</td>
+                            <td>
+                                <div>{{ b['name'] }}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted)">{{ b['email'] }}</div>
+                            </td>
+                            <td>{{ b['car_name'] }}</td>
+                            <td>{{ b['start_date'] }} ({{ b['days'] }} days)</td>
+                            <td>₹{{ b['total'] }}</td>
+                            <td>
+                                <span style="color: {{ '#00ff00' if b['status'] == 'active' else '#ff4d4d' }}">
+                                    {{ b['status']|capitalize }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- Users Section -->
         <div id="section-users" class="admin-panel" style="display:none">
             <h2 style="margin-bottom: 32px;">Registered Accounts</h2>
